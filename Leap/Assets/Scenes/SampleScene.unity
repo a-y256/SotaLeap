@@ -156,7 +156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -235, y: -132}
+  m_AnchoredPosition: {x: -665, y: -132}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &73786076
@@ -565,7 +565,6 @@ Transform:
   m_Children:
   - {fileID: 1338817372}
   - {fileID: 1766160092}
-  - {fileID: 1756117965}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &278122530
@@ -585,9 +584,9 @@ MonoBehaviour:
   rightElbowPivot: {fileID: 875327837}
   leftShoulderPivot: {fileID: 1338817372}
   leftElbowPivot: {fileID: 418271464}
-  shoulderRSign: 1
-  shoulderLSign: -1
-  elbowRSign: 1
+  shoulderRSign: -1
+  shoulderLSign: 1
+  elbowRSign: -1
   elbowLSign: -1
 --- !u!1 &355760532
 GameObject:
@@ -1247,7 +1246,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -235, y: 116}
+  m_AnchoredPosition: {x: -665, y: 116}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &767052386
@@ -1326,7 +1325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -709, y: 116}
+  m_AnchoredPosition: {x: -326, y: 116}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &782683214
@@ -2271,7 +2270,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -709, y: -132}
+  m_AnchoredPosition: {x: -326, y: -132}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1172342580
@@ -3096,8 +3095,8 @@ MonoBehaviour:
   shoulderRText: {fileID: 767052386}
   elbowRText: {fileID: 73786076}
   headTransform: {fileID: 0}
-  shoulderOffsetDegR: -30
-  shoulderOffsetDegL: 30
+  shoulderOffsetDegR: 30
+  shoulderOffsetDegL: -30
   elbowOffsetDegR: 0
   elbowOffsetDegL: 0
   limitShoulder: 0
@@ -3106,9 +3105,9 @@ MonoBehaviour:
   limitElbow: 0
   elbowMin: 0
   elbowMax: 90
-  shoulderRSign: 1
-  shoulderLSign: 1
-  elbowRSign: -1
+  shoulderRSign: -1
+  shoulderLSign: -1
+  elbowRSign: 1
   elbowLSign: -1
   invertElbowCurveR: 1
   invertElbowCurveL: 1
@@ -3121,11 +3120,11 @@ Transform:
   m_GameObject: {fileID: 1756117960}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.2099996, y: -20.3, z: -77.3}
+  m_LocalPosition: {x: -18.51, y: 0, z: 0}
   m_LocalScale: {x: -0.01, y: -0.01, z: -0.01}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 278122529}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1756117966
 MonoBehaviour:
@@ -3855,3 +3854,4 @@ SceneRoots:
   - {fileID: 1700752698}
   - {fileID: 2056166369}
   - {fileID: 278122529}
+  - {fileID: 1756117965}
