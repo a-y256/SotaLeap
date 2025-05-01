@@ -3099,6 +3099,8 @@ MonoBehaviour:
   shoulderOffsetDegL: -30
   elbowOffsetDegR: 0
   elbowOffsetDegL: 0
+  shoulderScale: 1
+  elbowScale: 1.82
   limitShoulder: 0
   shoulderMin: -30
   shoulderMax: 90

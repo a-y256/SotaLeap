@@ -1,18 +1,18 @@
 /******************************************************************************
- * ArmAnglesCsvLogger.cs – Offset / Invert を左右個別に調整できる版            *
+ * ArmAnglesCsvLogger.cs – Shoulder / Elbow “全体スケール” 追加版               *
  *                                                                            *
- *  ▼ 追加・変更点                                                            *
- *   • 肩オフセット・肘オフセットを **左右別々** に設定可能                    *
- *   • 肘カーブ 0-90° ↔ 90-0° の Invert も **左右別々**                        *
+ *  ✔ 角度計算・UI 更新      → 毎フレーム                                   *
+ *  ✔ CSV 出力          → ボタン( Space )で ON/OFF                         *
+ *  ✔ キャリブ (C)       → 腕を真下に下ろした瞬間を 0° に                  *
  *                                                                            *
- * ─ Inspector 新項目 ─────────────────────────────────────────────────────── *
- *   [Offset (deg)]                                                           *
- *      shoulderOffsetDegR / shoulderOffsetDegL                               *
- *      elbowOffsetDegR    / elbowOffsetDegL                                  *
- *   [Elbow Mapping 0-90°]                                                    *
- *      invertElbowCurveR / invertElbowCurveL                                 *
+ * ─ 新しく追加された Inspector 項目 ──────────────────────────────────────── *
+ *    [Scale Coefficient (×)]                                                 *
+ *        shoulderScale   … 肩ピッチに掛ける係数 (左右共通, 既定=1)          *
+ *        elbowScale      … 肘角に掛ける係数 (左右共通, 既定=1)              *
  *                                                                            *
- *  ▼ 他機能は前回と同じ                                                      *
+ *   スケールは  Offset → SignFlip → Scale → Clamp  の順に適用                *
+ *                                                                            *
+ * その他の Offset / Limit / Invert / Sign Flip 機能はそのまま保持。          *
  ******************************************************************************/
 
 using UnityEngine;
@@ -38,12 +38,17 @@ public class ArmAnglesCsvLogger : MonoBehaviour
     [Header("Optional HMD / MainCamera")]
     public Transform headTransform;
 
-    /* ─ Offset ─ */
+    /* ─ Offset (deg) ─ */
     [Header("Offset (deg) ─ Side-specific")]
     public float shoulderOffsetDegR = 0f;
     public float shoulderOffsetDegL = 0f;
     public float elbowOffsetDegR    = 0f;
     public float elbowOffsetDegL    = 0f;
+
+    /* ─ Global Scale (new) ─ */
+    [Header("Scale Coefficient (×)")]
+    public float shoulderScale = 1f;   // 肩ピッチ用
+    public float elbowScale    = 1f;   // 肘角用
 
     /* ─ Limit ─ */
     [Header("Shoulder Limit")]
@@ -58,12 +63,12 @@ public class ArmAnglesCsvLogger : MonoBehaviour
 
     /* ─ Sign Flip ─ */
     [Header("Sign Flip (±1)")]
-    public int shoulderRSign =  1;
-    public int shoulderLSign =  1;
+    public int shoulderRSign = -1;    // 肩は符号反転済み
+    public int shoulderLSign = -1;
     public int elbowRSign    =  1;
     public int elbowLSign    = -1;
 
-    /* ─ Elbow Curve (per side) ─ */
+    /* ─ Elbow Curve Invert ─ */
     [Header("Elbow Mapping 0-90°  (Invert per side)")]
     public bool invertElbowCurveR = false;
     public bool invertElbowCurveL = false;
@@ -85,14 +90,13 @@ public class ArmAnglesCsvLogger : MonoBehaviour
     /* ══ INIT ══ */
     void Awake()
     {
-        logButton.onClick.AddListener(ToggleLogging);
-        buttonLabel.text = "計測開始";
+        if (logButton) logButton.onClick.AddListener(ToggleLogging);
+        if (buttonLabel) buttonLabel.text = "計測開始";
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) ToggleLogging();
-
         if (Input.GetKeyDown(KeyCode.C))
         {
             calibDown = headTransform ? -headTransform.up : Vector3.down;
@@ -143,8 +147,6 @@ public class ArmAnglesCsvLogger : MonoBehaviour
         Vector3 S_R = chest + right * (W * .5f);
         Vector3 S_L = chest - right * (W * .5f);
 
-        /* リセットせず前値保持で NaN を防ぐ */
-
         foreach (Hand hand in provider.CurrentFrame.Hands)
         {
             bool isLeft = hand.IsLeft;
@@ -155,24 +157,23 @@ public class ArmAnglesCsvLogger : MonoBehaviour
             Vector3 upper = (el - sh).normalized;
             Vector3 fore  = (wr - el).normalized;
 
-            /* --- Shoulder --- */
-            Vector3 axis = isLeft ? right : -right;
-            float basePitch = Vector3.SignedAngle(calibDown, upper, axis);
-
-            int   sSign   =  isLeft ? shoulderLSign : shoulderRSign;
-            float sOffset = isLeft ? shoulderOffsetDegL : shoulderOffsetDegR;
-            float pitch   = basePitch * sSign + sOffset;
+            /* ─ Shoulder ─ */
+            Vector3 axis      = isLeft ? right : -right;
+            float basePitch   = Vector3.SignedAngle(calibDown, upper, axis);
+            int   sSign       = isLeft ? shoulderLSign : shoulderRSign;
+            float sOffset     = isLeft ? shoulderOffsetDegL : shoulderOffsetDegR;
+            float pitch       = (basePitch * sSign + sOffset) * shoulderScale;
             if (limitShoulder) pitch = Mathf.Clamp(pitch, shoulderMin, shoulderMax);
 
-            /* --- Elbow 0-90 --- */
-            float rawAngle   = Mathf.Clamp(Vector3.Angle(upper, fore), 0f, 180f);
-            float flex       = Mathf.InverseLerp(0f, 135f, rawAngle) * 90f;
-            bool  invert     = isLeft ? invertElbowCurveL : invertElbowCurveR;
-            if (invert) flex = 90f - flex;
+            /* ─ Elbow 0-90 ─ */
+            float rawA        = Mathf.Clamp(Vector3.Angle(upper, fore), 0f, 180f);
+            float flex        = Mathf.InverseLerp(0f, 135f, rawA) * 90f;
+            bool  inv         = isLeft ? invertElbowCurveL : invertElbowCurveR;
+            if (inv) flex = 90f - flex;
 
-            int   eSign   =  isLeft ? elbowLSign : elbowRSign;
-            float eOffset = isLeft ? elbowOffsetDegL : elbowOffsetDegR;
-            float elbow   = flex * eSign + eOffset;
+            int   eSign       = isLeft ? elbowLSign : elbowRSign;
+            float eOffset     = isLeft ? elbowOffsetDegL : elbowOffsetDegR;
+            float elbow       = (flex * eSign + eOffset) * elbowScale;
             if (limitElbow) elbow = Mathf.Clamp(elbow, elbowMin, elbowMax);
 
             if (isLeft) { ShoulderL = pitch; ElbowL = elbow; }
