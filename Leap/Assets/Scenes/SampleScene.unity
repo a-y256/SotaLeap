@@ -3067,6 +3067,8 @@ GameObject:
   - component: {fileID: 1756117965}
   - component: {fileID: 1756117961}
   - component: {fileID: 1756117966}
+  - component: {fileID: 1756117967}
+  - component: {fileID: 1756117968}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3101,18 +3103,24 @@ MonoBehaviour:
   elbowOffsetDegL: 0
   shoulderScale: 1
   elbowScale: 1.82
-  limitShoulder: 0
-  shoulderMin: -30
-  shoulderMax: 90
-  limitElbow: 0
-  elbowMin: 0
-  elbowMax: 90
+  limitShoulder: 1
+  shoulderMinR: -180
+  shoulderMaxR: 60
+  shoulderMinL: -60
+  shoulderMaxL: 180
+  limitElbow: 1
+  elbowMinR: -65
+  elbowMaxR: 90
+  elbowMinL: -90
+  elbowMaxL: 65
   shoulderRSign: -1
   shoulderLSign: -1
   elbowRSign: 1
   elbowLSign: -1
   invertElbowCurveR: 1
   invertElbowCurveL: 1
+  exportJava: 1
+  javaFileName: poseSeq
 --- !u!4 &1756117965
 Transform:
   m_ObjectHideFlags: 0
@@ -3143,6 +3151,30 @@ MonoBehaviour:
   imageRetriever: {fileID: 983471434}
   targetUI: {fileID: 355760533}
   targetRenderer: {fileID: 0}
+--- !u!114 &1756117967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756117960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adc12eb1d1097f47b71606950ef05c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1756117968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756117960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91293ee79ad51a469ea7aa5229dc6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1756368925
 GameObject:
   m_ObjectHideFlags: 0
