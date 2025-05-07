@@ -43,7 +43,7 @@ Material:
     - _GradationMode: 0
     - _IsEdgeShining: 1
     - _IsSubColor: 0
-    - _PatternDensity: 0.25
+    - _PatternDensity: -0.14
     - _PatternMoveDir: 0
     - _PatternRotate: 0
     - _PatternSize: 0.25

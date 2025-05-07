@@ -9,7 +9,7 @@ using System.Text;
 public class SotaJavaExporter : MonoBehaviour
 {
     const short CONST_POS = 100;   // 1,6,7,8 未使用ジョイント
-    const int   PLAY_MS   = 100;   // 各モーション再生時間 [ms]
+    const int   PLAY_MS   = 30;   // 各モーション再生時間 [ms]
 
     StreamWriter jw;
     int poseIndex;
@@ -40,8 +40,8 @@ $@"    }};
         if(!GlobalVariable.TRUE) throw new SpeechRecogAbortException(""default"");
 
         Byte[]  ids   = new Byte[]{{ (byte)1,(byte)2,(byte)3,(byte)4,(byte)5,(byte)6,(byte)7,(byte)8 }};
-        Short[] power = new Short[]{{ (short)100,(short)100,(short)100,(short)30,
-                                      (short)100,(short)100,(short)100,(short)30 }};
+        Short[] power = new Short[]{{ (short)100,(short)100,(short)100,(short)100,
+                                      (short)100,(short)100,(short)100,(short)100 }};
 
         for(Short[] p : poses) {{
             pose = new CRobotPose();
